@@ -36,7 +36,7 @@ rag-system/
 Install the required packages:
 
 ```pip
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 pip install sentence-transformers requests PyMuPDF numpy tqdm
 ```
 
