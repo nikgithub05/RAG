@@ -131,9 +131,9 @@ def main():
         similar_items = find_most_similar(query, embeddings_tensor, sentences, top_k=20)  # similar words to be displayed 
         
         # Display retrieved context
-        print("\nRetrieved context:")
-        for i, item in enumerate(similar_items[:10]):  # Show only top 10 for brevity
-            print(f"{i+1}. [Score: {item['score']:.4f}] {item['sentence']}")
+        # print("\nRetrieved context:")
+        # for i, item in enumerate(similar_items[:10]):  # Show only top 10 for brevity
+        #     print(f"{i+1}. [Score: {item['score']:.4f}] {item['sentence']}")
         
         print("\nGenerating response from Ollama...")
         response = send_to_ollama(similar_items, query)
