@@ -4,6 +4,7 @@ import numpy as np
 import json
 import os
 import torch
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
@@ -13,7 +14,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
 # Initialize the model with GPU support
-model = SentenceTransformer('gemma3:1b')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 model = model.to(device)
 print(f"Model loaded on {device}")
 
@@ -31,7 +32,9 @@ def extract_text_from_pdf(pdf_path):
 
 def create_embeddings_and_sentences(text):
     # Split text into sentences and filter out empty ones
-    sentences = [s for s in text.split('\n') if s.strip()]
+    processed_text = re.sub(r'(?<!\n)\n(?!\n)', ' ', text)
+    sentences = [s.strip() for s in re.split(r'\n+', processed_text) if s.strip()]
+
     
     if not sentences:
         return [], []
@@ -69,14 +72,14 @@ def create_embeddings_and_sentences(text):
     
     return all_embeddings, sentences
 
-def save_embeddings_to_file(embeddings, file_path='embeddings.json'):
+def save_embeddings_to_file(embeddings, file_path='embeddings.json'):  # Embedding.json file path
     start_time = time.time()
     with open(file_path, 'w') as f:
         json.dump(embeddings, f)
     elapsed_time = time.time() - start_time
     print(f"Saved {len(embeddings)} embeddings to {file_path} in {elapsed_time:.2f} seconds")
 
-def save_sentences_to_file(sentences, file_path='sentences.json'):
+def save_sentences_to_file(sentences, file_path='sentences.json'):  #sentences.json file path
     start_time = time.time()
     with open(file_path, 'w') as f:
         json.dump(sentences, f)
@@ -143,7 +146,7 @@ def update_database(pdf_folder):
 
 if __name__ == "__main__":
     # Set PDF folder path
-    pdf_folder = './pdf'
+    pdf_folder = './pdf/offgrid'
     
     # Print CUDA info
     if device == "cuda":
